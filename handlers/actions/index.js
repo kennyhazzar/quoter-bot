@@ -15,7 +15,7 @@ function choiceKeyboard(callback_data) {
     }
 }
 
-action.use(require('./addQuotes'))
+// action.use(require('./addQuotes'))
 
 action.action("Quotes", ctx => {
     console.log("Quotes")
@@ -36,4 +36,13 @@ action.action("Reminders", ctx => {
         "Вы можете добавить, удалить или посмотреть сохраненные категории",
         choiceKeyboard(["AddReminders", "DeleteReminders", "ShowReminders"]))
 })
+
+action.action("DeleteQuotes", ctx => {
+    ctx.answerCbQuery("Воспользуйтесь командой /deleteQuote")
+})
+
+action.action("AddReminders", ctx => {
+    ctx.answerCbQuery("Воспользуйтесь командой /remind")
+})
+
 module.exports = action

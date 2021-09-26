@@ -35,27 +35,20 @@ settingAddQuotesScene.on('text', ctx => {
 
 })
 
-settingAddQuotesScene.leave(ctx => {
+settingAddQuotesScene.leave(async ctx => {
     console.log(`${quoteCount}\n${ctx.session.quotes}`)
-    templateCount = 0
+    quoteCount = 0
     if (ctx.session.quotes.length === 0) {
         return ctx.reply(`Сохранение прервано. Несохраненные цитаты удалены`)
     }
     // AnswerQuery.addAnswerCbQuery(ctx.session.quotes)
+    for (let index = 0; index < ctx.session.quotes.length; index++) {
+        const quote = ctx.session.quotes[index]
+        await Quote.addQuote(quote)
+    }
     return ctx.reply(`Сохранено ${ctx.session.quotes.length} цитат в категорию N`)
 }, removeKeyboard)
 
 const stage = new Stage([settingAddQuotesScene])
 
-const addQuotesComposer = new Composer()
-
-addQuotesComposer.use(stage.middleware())
-
-addQuotesComposer.action("AddQuotes", ctx => {
-    console.log('AddQuotes')
-    ctx.scene.enter("settingAddQuotesScene")
-})
-
-addQuotesComposer.command('addQuery', ctx => console.log("addQuery"))
-
-module.exports = addQuotesComposer
+module.exports = stage
