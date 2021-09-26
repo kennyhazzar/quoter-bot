@@ -15,23 +15,25 @@ function choiceKeyboard(callback_data) {
     }
 }
 
+action.use(require('./addQuotes'))
+
 action.action("Quotes", ctx => {
+    console.log("Quotes")
     ctx.editMessageText(
         "Вы можете добавить, удалить или посмотреть сохраненные цитаты",
-        choiceKeyboard("AddQuotes", "DeleteQuotes", "ShowQuotes"))
+        choiceKeyboard(["AddQuotes", "DeleteQuotes", "ShowQuotes"]))
 })
 
 action.action("Categories", ctx => {
     ctx.editMessageText(
         "Вы можете добавить, удалить или посмотреть сохраненные категории",
-        choiceKeyboard("AddCategories", "DeleteCategories", "ShowCategories")
+        choiceKeyboard(["AddCategories", "DeleteCategories", "ShowCategories"])
     )
 })
 
 action.action("Reminders", ctx => {
     ctx.editMessageText(
         "Вы можете добавить, удалить или посмотреть сохраненные категории",
-        choiceKeyboard("AddReminders", "DeleteReminders", "ShowReminders"))
+        choiceKeyboard(["AddReminders", "DeleteReminders", "ShowReminders"]))
 })
-
 module.exports = action
