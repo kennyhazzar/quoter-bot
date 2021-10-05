@@ -7,17 +7,29 @@ const addReminderHandler = async ctx => {
 
     const commandInstance = userMessage.substring(userMessage.search(' '), userMessage.length).trim()
 
+    ctx.reply("test done")
     if (commandInstance === '/remind') {
-        ctx.reply("Для добавления нового приветственного сообщения как шаблон, введи /remind <Текст сообщения>")
+        ctx.reply("Для добавления нового приветственного сообщения как шаблон, введи /remind <Время, либо шаблон> <Категория>\nЕсли категория не выбрана, то цитаты будут браться все подряд")
     } else {
-        console.log(commandInstance)
-        const reminder = getNumberOfTime(commandInstance)
-        Reminder.addReminder(reminder)
-        const quote = await Quote.getQuote()
-        setTimeout(async () => {
-            ctx.reply(quote[getRandomInt(0, quote.length)].data)
-        }, reminder - (new Date()).getTime())
-        ctx.reply("Уведомление добавлено!")
+        const requestCommand = commandInstance.split(' ')
+        console.log(requestCommand)
+        const remindTime = getNumberOfTime(requestCommand[0])
+
+        const category = requestCommand[1]
+
+        if (!category) {
+            await Reminder.addReminder(remindTime, ctx.chat.id)
+            return ctx.reply(`Уведомление ${requestCommand[0]} было добавлено! Выбраны все категории для пользователя @${ctx.chat.username}`)
+        }
+
+        const quote = await Quote.getQuote({ category })
+        if (quote.length === 0) {
+            return ctx.reply(`Такой категории не существует`)
+        }
+        console.log(remindTime)
+        await Reminder.addReminder(remindTime, ctx.chat.id, category)
+        return ctx.reply(`Уведомление "${requestCommand[0]}" было добавлено! Категория: ${requestCommand[1]} для пользователя @${ctx.chat.username}`)
+
     }
 }
 
@@ -35,6 +47,6 @@ function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
-  }
+}
 
 module.exports = addReminderHandler
