@@ -7,12 +7,14 @@ const deleteQueryHandler = async ctx => {
 
     const query = await Query.getQuote()
 
+    console.log(query)
+
     const commandInstance = userMessage.substring(userMessage.search(' '), userMessage.length).trim()
 
     if (commandInstance === '/deleteQuote') {
-        ctx.replyWithHTML(`Список шаблонов приветственного сообщения:\n(Текст, айди)\n
+        ctx.replyWithHTML(`Список цитат:\n(Текст, айди)\n
         ${query.length == 0 ? "Пусто\n" : query.map((item, index) => {
-            return "\n" + `${index + 1}. ${item.data}\n<strong>${item._id}</strong>\n`
+            return "\n" + `${index + 1}. ${item.data.quote}\n<strong>${item._id}</strong>\n`
         }).join('')}\n\nДля удаления шаблона, введи /deleteQuote &lt;айди из списка&gt;`)
     } else {
         const quoteDelete = await Query.getQuoteOne({_id: commandInstance})
