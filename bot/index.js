@@ -8,7 +8,7 @@ const bot = new Telegraf(config.get("botToken"), {
     telegram: { webhookReply: false }
 })
 
-bot.context.mainState = {}
+bot.context.quoteMenuNumber = 0
 
 bot.use(session())
 
