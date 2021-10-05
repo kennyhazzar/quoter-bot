@@ -9,6 +9,8 @@ const Quote = nedbPromise.fromInstance(db)
 const compactDb = () => db.persistence.compactDatafile()
 
 const isQuoteValid = (quoteText) => typeof quoteText == 'string' ? true : false
+const isCategoryValid = (quoteText) => typeof quoteText == 'string' ? true : false
+const isUserValid = (quoteText) => typeof quoteText == 'number' ? true : false
 
 const getQuoteOne = (query = {}) => Quote.findOne(query)
 
@@ -16,9 +18,7 @@ const getQuote = (query = {}) => Quote.find(query)
 
 const getCurrentQuote = () => Quote.findOne({ isSelect: true })
 
-const addQuote = (quoteText, isSelect = false) =>
-    isQuoteValid(quoteText) ?
-        Quote.insert({ data: quoteText, isSelect }) : null
+const addQuote = (quoteText, categoryText, userId) => Quote.insert({ quote: quoteText, category: categoryText, userId })
 
 
 const updateCurrentquote = (newQuoteText) => {
