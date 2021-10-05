@@ -10,4 +10,6 @@ commands.use(require('./context'))
 
 commands.command('/remind', require('../actions/addReminder'))
 
+commands.command('/menu', require('./testMenu'))
+
 module.exports = commands

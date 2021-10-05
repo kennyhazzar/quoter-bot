@@ -9,7 +9,7 @@ const startHandler = async ctx => {
 
     if (user?.isSub) {
         // const currentTime = Date.now()
-        ctx.mainState.menuMessageId = ctx.message.message_id
+        // ctx.mainState.menuMessageId = ctx.message.message_id
         return ctx.reply(`Привет! Добавь новые цитаты:)\nДо следующей цитаты N часов N минут`, {
             reply_markup: {
                 inline_keyboard: [
