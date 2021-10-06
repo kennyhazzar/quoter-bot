@@ -21,7 +21,7 @@ const getCurrentQuote = () => Quote.findOne({ isSelect: true })
 const addQuote = (quoteText, categoryText, userId) => Quote.insert({ quote: quoteText, category: categoryText, userId })
 
 
-const updateCurrentquote = (newQuoteText) => {
+const updateCurrentQuote = (newQuoteText) => {
     isQuoteValid(newQuoteText)
         ? Quote.update({ isSelect: true }, { $set: { data: newQuoteText } }) : null
     compactDb()
@@ -46,7 +46,7 @@ module.exports = {
     getQuote,
     getQuoteOne,
     addQuote,
-    updateCurrentquote,
+    updateCurrentQuote,
     changeCurrentQuote,
     removeQuote
 }
