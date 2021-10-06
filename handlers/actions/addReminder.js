@@ -1,18 +1,18 @@
 ﻿const Reminder = require('../../stores/context/reminder')
 const Quote = require('../../stores/context/quote.js')
+
 const addReminderHandler = async ctx => {
     if (ctx.chat.type !== 'private') return null
 
-    var userMessage = ctx.message.text
+    const userMessage = ctx.message.text
 
     const commandInstance = userMessage.substring(userMessage.search(' '), userMessage.length).trim()
 
-    ctx.reply("test done")
     if (commandInstance === '/remind') {
         ctx.reply("Для добавления нового приветственного сообщения как шаблон, введи /remind <Время, либо шаблон> <Категория>\nЕсли категория не выбрана, то цитаты будут браться все подряд")
     } else {
         const requestCommand = commandInstance.split(' ')
-        console.log(requestCommand)
+
         const remindTime = getNumberOfTime(requestCommand[0])
 
         const category = requestCommand[1]
@@ -26,9 +26,9 @@ const addReminderHandler = async ctx => {
         if (quote.length === 0) {
             return ctx.reply(`Такой категории не существует`)
         }
-        console.log(remindTime)
+
         await Reminder.addReminder(remindTime, ctx.chat.id, category)
-        return ctx.reply(`Уведомление "${requestCommand[0]}" было добавлено! Категория: ${requestCommand[1]} для пользователя @${ctx.chat.username}`)
+        return ctx.reply(`Уведомление "${requestCommand[0]}" было добавлено! Категория: ${requestCommand[1]} \nДля пользователя @${ctx.chat.username}`)
 
     }
 }
@@ -36,9 +36,8 @@ const addReminderHandler = async ctx => {
 function getNumberOfTime(timeString) {
     const currentTime = new Date()
     const reminderTime = timeString.split(':')
-    currentTime.setHours(reminderTime[0] - 4)
     console.log(currentTime)
-    // currentTime.setHours(currentTime.getHours() + 4)
+    currentTime.setHours(currentTime.getHours() + 4)
     currentTime.setMinutes(reminderTime[1])
     return currentTime.getTime()
 }
