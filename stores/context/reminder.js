@@ -14,7 +14,7 @@ const getReminder = (query = {}) => Reminder.find(query)
 
 const getCurrentReminder = () => Reminder.findOne({ isSelect: true })
 
-const addReminder = (time, userId, category = undefined) => Reminder.insert({ time, category, userId })
+const addReminder = (time, userId, oneTime, stringTime, category = undefined) => Reminder.insert({ time, category, userId, oneTime, hasUsed: false, stringTime })
 
 const changeCurrentReminder = idNewCurrent => {
     Reminder.update(
@@ -22,6 +22,14 @@ const changeCurrentReminder = idNewCurrent => {
         { $set: { isSelect: false } }
     )
     Reminder.update({ _id: idNewCurrent }, { $set: { isSelect: true } })
+    compactDb()
+}
+
+const changeReminderToUsed = _id => {
+    Reminder.update(
+        { _id },
+        { $set: { hasUsed: true } }
+    )
     compactDb()
 }
 
@@ -36,5 +44,6 @@ module.exports = {
     getReminderOne,
     addReminder,
     changeCurrentReminder,
-    removeReminder
+    removeReminder,
+    changeReminderToUsed
 }
