@@ -1,5 +1,8 @@
 ﻿const Reminder = require('../../stores/context/reminder')
-const Quote = require('../../stores/context/quote.js')
+
+// const TIME_OFFSET_UTC3 = 10800000
+// const TIME_OFFSET_UTC4 = 14400000
+// const TIME_OFFSET_UTC7 = 25200000
 
 const addReminderHandler = async ctx => {
     if (ctx.chat.type !== 'private') return null
@@ -17,35 +20,36 @@ const addReminderHandler = async ctx => {
 
         const category = requestCommand[1]
 
+        const at = requestCommand[2]
+
+        console.log(requestCommand)
+
         if (!category) {
-            await Reminder.addReminder(remindTime, ctx.chat.id)
-            return ctx.reply(`Уведомление ${requestCommand[0]} было добавлено! Выбраны все категории для пользователя @${ctx.chat.username}`)
+            await Reminder.addReminder(remindTime, ctx.chat.id, true, new Date(remindTime).toUTCString())
+            return ctx.reply(`Одноразовое уведомление в ${requestCommand[0]} было добавлено! Выбраны все категории для пользователя @${ctx.chat.username}`)
         }
 
-        const quote = await Quote.getQuote({ category })
-        if (quote.length === 0) {
-            return ctx.reply(`Такой категории не существует`)
-        }
-
-        await Reminder.addReminder(remindTime, ctx.chat.id, category)
-        return ctx.reply(`Уведомление "${requestCommand[0]}" было добавлено! Категория: ${requestCommand[1]} \nДля пользователя @${ctx.chat.username}`)
+        await Reminder.addReminder(remindTime, ctx.chat.id, true, new Date(remindTime).toUTCString(), category)
+        return ctx.reply(`Одноразовое уведомление в ${requestCommand[0]} было добавлено! Категория: ${requestCommand[1]} \nДля пользователя @${ctx.chat.username}`)
 
     }
 }
 
 function getNumberOfTime(timeString) {
     const currentTime = new Date()
-    const reminderTime = timeString.split(':')
-    console.log(currentTime)
-    currentTime.setHours(currentTime.getHours() + 4)
-    currentTime.setMinutes(reminderTime[1])
-    return currentTime.getTime()
-}
-
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
+    const reminderTimeString = timeString.split(':')
+    const reminderTime = new Date(
+        currentTime.getFullYear(),
+        currentTime.getMonth(),
+        currentTime.getDate(),
+        reminderTimeString[0],
+        reminderTimeString[1]
+    )
+    console.log(new Date(reminderTime.getTime()))
+    // currentTime.setHours(reminderTimeString[0])
+    // currentTime.setMinutes(reminderTimeString[1])
+    // console.log(`currentTime after: - ${currentTime}`)
+    return reminderTime.getTime()
 }
 
 module.exports = addReminderHandler
