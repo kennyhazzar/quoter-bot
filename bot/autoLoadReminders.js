@@ -39,12 +39,15 @@ const autoLoad = async (bot) => {
 }
 
 async function remind(data, bot) {
-    console.log(`date on remind: ${new Date(data.time).getTime() - new Date().getTime()}`)
+
+    const time = new Date(data.time).getTime() - new Date().getTime()
+
+    console.log(`date on remind: ${time / 1000}s`)
     console.log(new Date(data.time))
 
     if (data.oneTime) {
         console.log("oneTime")
-        if (data.hasUsed) {
+        if (data.hasUsed || (time < 0)) {
             return
         }
         setTimeout(async () => {
@@ -70,7 +73,7 @@ async function remind(data, bot) {
                     console.log(error)
                 }
             }
-        }, new Date(data.time).getTime() - new Date().getTime())
+        }, time)
     } else {
         //setInterval
     }
