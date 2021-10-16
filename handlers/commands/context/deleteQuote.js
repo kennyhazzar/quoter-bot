@@ -12,15 +12,20 @@ const deleteQueryHandler = async ctx => {
     const commandInstance = userMessage.substring(userMessage.search(' '), userMessage.length).trim()
 
     if (commandInstance === '/deleteQuote') {
-        ctx.replyWithHTML(`Список цитат:\n(Текст, айди)\n
+        try {
+            ctx.replyWithHTML(`Список цитат:\n(Текст, айди)\n
         ${query.length == 0 ? "Пусто\n" : query.map((item, index) => {
-            return "\n" + `${index + 1}. ${item.data.quote}\n<strong>${item._id}</strong>\n`
-        }).join('')}\n\nДля удаления шаблона, введи /deleteQuote &lt;айди из списка&gt;`)
+                return "\n" + `${index + 1}. ${item.quote}\n<strong>${item._id}</strong>\n`
+            }).join('')}\n\nДля удаления шаблона, введи /deleteQuote &lt;айди из списка&gt;`)
+        } catch (error) {
+            ctx.reply(`Ошибка на стороне сервера, обратитесь к разработчику!Текст ошибки:\n${error.message}`)
+            console.log(error)
+        }
     } else {
-        const quoteDelete = await Query.getQuoteOne({_id: commandInstance})
+        const quoteDelete = await Query.getQuoteOne({ _id: commandInstance })
         await Query.removeQuote(commandInstance)
-        ctx.replyWithHTML(`<strong>Цитата с содержанием</strong>:\n${quoteDelete.data}\n<strong>удалено</strong>`)
-        
+        ctx.replyWithHTML(`<strong>Цитата с содержанием</strong>:\n${quoteDelete.quote}\n<strong>удалена</strong>`)
+
     }
 }
 
