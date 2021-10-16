@@ -1,5 +1,5 @@
 ﻿const { Composer } = require('telegraf')
-
+const help = require('./help')
 const action = new Composer()
 
 function choiceKeyboard(callback_data) {
@@ -24,18 +24,9 @@ action.action("Quotes", ctx => {
         choiceKeyboard(["AddQuotes", "DeleteQuotes", "ShowQuotes"]))
 })
 
-action.action("Categories", ctx => {
-    ctx.editMessageText(
-        "Вы можете добавить, удалить или посмотреть сохраненные категории",
-        choiceKeyboard(["AddCategories", "DeleteCategories", "ShowCategories"])
-    )
-})
+action.action("Help", help)
 
-action.action("Reminders", ctx => {
-    ctx.editMessageText(
-        "Вы можете добавить, удалить или посмотреть сохраненные категории",
-        choiceKeyboard(["AddReminders", "DeleteReminders", "ShowReminders"]))
-})
+action.command("/help", help)
 
 action.action("DeleteQuotes", ctx => {
     ctx.answerCbQuery("Воспользуйтесь командой /deleteQuote")
