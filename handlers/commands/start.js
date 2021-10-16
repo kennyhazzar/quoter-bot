@@ -14,8 +14,9 @@ const startHandler = async ctx => {
             reply_markup: {
                 inline_keyboard: [
                     [{ "text": "Цитаты", "callback_data": "Quotes" }],
-                    [{ "text": "Категории", "callback_data": "Categories" }],
-                    [{"text": "Уведомления", "callback_data": "Reminders"}]
+                    [{"text": "Помощь", "callback_data": "Help"}]
+                    // [{ "text": "Категории", "callback_data": "Categories" }],
+                    // [{"text": "Уведомления", "callback_data": "Reminders"}]
                 ],
                 force_reply: true
             }
