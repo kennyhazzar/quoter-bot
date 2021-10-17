@@ -1,4 +1,4 @@
-﻿const { getReminder, changeReminderToUsed } = require('../stores/context/reminder')
+﻿const { getReminder, changeReminderToUsed, addIntervalId } = require('../stores/context/reminder')
 const isObjectEqual = require('./objectEquals')
 const { getQuote } = require('../stores/context/quote')
 
@@ -40,14 +40,16 @@ const autoLoad = async (bot) => {
 
 async function remind(data, bot) {
 
-    const time = new Date(data.time).getTime() - new Date().getTime()
-
-    console.log(`date on remind: ${time / 1000}s`)
-    console.log(new Date(data.time))
-
     if (data.oneTime) {
         console.log("oneTime")
+
+        const time = new Date(data.time).getTime() - new Date().getTime()
+
+        console.log(`date on remind: ${time / 1000}s`)
+        console.log(new Date(data.time))
+
         if (data.hasUsed || (time < 0)) {
+            console.log("setTimeout hasUsed")
             return
         }
         setTimeout(async () => {
@@ -66,7 +68,6 @@ async function remind(data, bot) {
 
                 randomQuote = quote[getRandomInt(0, quote.length)].quote
                 bot.telegram.sendMessage(data.userId, randomQuote)
-                console.log(data._id)
                 try {
                     await changeReminderToUsed(data._id)
                 } catch (error) {
@@ -75,7 +76,30 @@ async function remind(data, bot) {
             }
         }, time)
     } else {
-        //setInterval
+        const timeInterval = data.time.time
+
+        if (data.hasUsed || (data.time.time < 0)) {
+            return
+        }
+
+        const idInterval = setInterval(async () => {
+            // console.log(idInterval)
+            // foo(idInterval)
+
+            if (!data.category) {
+                let quote = await getQuote({ userId: data.userId })
+
+                randomQuote = quote[getRandomInt(0, quote.length)].quote
+                await bot.telegram.sendMessage(data.userId, randomQuote)
+
+            } else {
+                let quote = await getQuote({ $and: [{ category: data.category }, { userId: data.userId }] })
+
+                randomQuote = quote[getRandomInt(0, quote.length)].quote
+                await bot.telegram.sendMessage(data.userId, randomQuote)
+            }
+        }, timeInterval)
+        
     }
 
 
@@ -85,6 +109,10 @@ function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
+}
+
+function foo(idInt) {
+    return console.log(idInt)
 }
 
 module.exports = autoLoad
