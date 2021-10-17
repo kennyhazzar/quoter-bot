@@ -38,6 +38,23 @@ const removeReminder = (_id) => {
     compactDb()
 }
 
+const addIntervalId = async (_id, idInterval) => {
+    Reminder.update(
+        { _id },
+        { $set: { idInterval } }
+    )
+    compactDb()
+}
+
+const stopInterval = (_id) => {
+    const temp = Reminder.update(
+        { _id },
+        { $set: { hasUsed: true } }
+    )
+    compactDb()
+    return temp
+}
+
 module.exports = {
     getCurrentReminder,
     getReminder,
@@ -45,5 +62,7 @@ module.exports = {
     addReminder,
     changeCurrentReminder,
     removeReminder,
-    changeReminderToUsed
+    changeReminderToUsed,
+    addIntervalId,
+    stopInterval
 }
