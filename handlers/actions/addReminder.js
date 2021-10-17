@@ -12,7 +12,7 @@ const addReminderHandler = async ctx => {
     const commandInstance = userMessage.substring(userMessage.search(' '), userMessage.length).trim()
 
     if (commandInstance === '/remind') {
-        ctx.reply("Для добавления нового приветственного сообщения как шаблон, введи /remind <Время, либо шаблон> <Категория>\nЕсли категория не выбрана, то цитаты будут браться все подряд")
+        ctx.reply("Для добавления нового одноразового напоминания, введи /remind <Время, либо шаблон> <Категория>\nЕсли категория не выбрана, то цитаты будут браться все подряд\nПример - /remind 14:00 Письмена")
     } else {
         const requestCommand = commandInstance.split(' ')
 

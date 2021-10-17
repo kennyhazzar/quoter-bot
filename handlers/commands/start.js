@@ -29,7 +29,7 @@ const startHandler = async ctx => {
         user.isSub = true
         await addUser(user)
         if (!message) {
-            return ctx.reply(`Привет, ${ctx.chat.username}! Ты подписался на ежедневную рассылку!`)
+            return ctx.reply(`Привет, ${ctx.chat.username}! Ты подписался на ежедневную рассылку! Воспользуйся повторно командой /start`)
         }
         return ctx.replyWithHTML(message.data)
     }

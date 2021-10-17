@@ -3,7 +3,7 @@
 const helpMessageWithMarkdown = {
     message: "",
     commands: [
-        { title: "***/start***", description: "Запуск меню" },
+        { title: "***/start***", description: "Запуск меню настроек" },
         { title: "***/remind***", description: "Добавление новой одноразовой напоминалки." },
         { title: "***/interval***", description: "Задает интервал, в который будут отправляться уведомления" },
         { title: "***/deleteQuote***", description: "Удаление цитат" },
