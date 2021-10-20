@@ -1,5 +1,5 @@
 ﻿const intervalTemplates = {
-    helpMessage: "Используй во втором аргументе команды /interval следующие шаблоны\n",
+    helpMessage: "Используй во втором аргументе команды /interval следующие шаблоны. Пример: /interval *1 Категория",
     templateKey: [
         { title: "*", description: "Один раз в сутки", timeInterval: 86400000 },
         { title: "**", description: "Два раза в сутки", timeInterval: 43200000 },
