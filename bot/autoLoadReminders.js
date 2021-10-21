@@ -35,7 +35,7 @@ const autoLoad = async (bot) => {
         } catch (error) {
             console.log(error)
         }
-    }, 2000);
+    }, 30000);
 }
 
 async function remind(data, bot) {
