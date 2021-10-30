@@ -74,6 +74,15 @@ function getIntervalByTag(tagTime) {
     else if (tagTime === '*3') {
         return intervalTemplates.templateKey[5]
     }
+    else if (tagTime === '30m') {
+        return intervalTemplates.templateKey[6]
+    }
+    else if (tagTime === '15m') {
+        return intervalTemplates.templateKey[7]
+    }
+    else if (tagTime === '5m') {
+        return intervalTemplates.templateKey[8]
+    }
     return false
 }
 
