@@ -43,10 +43,10 @@ async function remind(data, bot) {
     if (data.oneTime) {
         console.log("oneTime")
 
-        const time = new Date(data.time).getTime() - new Date().getTime()
+        const time = new Date(data.time.time).getTime() - new Date().getTime()
 
         console.log(`date on remind: ${time / 1000}s`)
-        console.log(new Date(data.time))
+        console.log(new Date(data.time.time))
 
         if (data.hasUsed || (time < 0)) {
             console.log("setTimeout hasUsed")
