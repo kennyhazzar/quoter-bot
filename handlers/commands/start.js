@@ -1,20 +1,29 @@
-﻿const { getCurrentStart } = require('../../stores/context/start')
-const { getUserOne, addUser, returnToSub } = require('../../stores/context/user')
-
+﻿const { getUserOne, addUser, returnToSub } = require('../../stores/context/user')
+const { getReminder } = require('../../stores/context/reminder')
 const startHandler = async ctx => {
     if (ctx.chat.type !== "private") return
 
-    const message = await getCurrentStart()
     var user = await getUserOne({ username: ctx.chat.username })
 
     if (user?.isSub) {
         // const currentTime = Date.now()
         // ctx.mainState.menuMessageId = ctx.message.message_id
-        return ctx.reply(`Привет! Добавь новые цитаты:)\nДо следующей цитаты N часов N минут`, {
+        // { $and: [{ category: data.category }, { userId: data.userId }] } 
+        const reminder = await getReminder({ $and: [{ userId: ctx.chat.id }, { hasUsed: false }] })
+
+        const currentTime = new Date()
+
+        const notificationMessage = `\nСейчас включены следующие напоминания:\n${reminder.length !== 0 ? reminder.map((item, index) => {
+            return `${index + 1}. ${!item.oneTime ? "Интервал" : "Одноразовое уведомление"} - <strong>${item.time.desc}</strong>\n`
+        }).join("") : "<strong>Пусто</strong>"}`
+
+        const startMessage = `Привет! Время на сервере: ${currentTime.getHours()}:${currentTime.getMinutes()}\n${notificationMessage}`
+
+        return ctx.replyWithHTML(startMessage, {
             reply_markup: {
                 inline_keyboard: [
                     [{ "text": "Цитаты", "callback_data": "Quotes" }],
-                    [{"text": "Помощь", "callback_data": "Help"}]
+                    [{ "text": "Помощь", "callback_data": "Help" }]
                     // [{ "text": "Категории", "callback_data": "Categories" }],
                     // [{"text": "Уведомления", "callback_data": "Reminders"}]
                 ],
@@ -35,7 +44,7 @@ const startHandler = async ctx => {
     }
 
     if (!user?.isSub) {
-        returnToSub({username: ctx.chat.username})
+        returnToSub({ username: ctx.chat.username })
         return ctx.reply(`Привет, ${ctx.chat.username}! Мы рады снова тебя видеть:)`)
     }
 }
