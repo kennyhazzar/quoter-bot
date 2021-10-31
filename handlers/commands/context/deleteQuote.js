@@ -7,8 +7,6 @@ const deleteQueryHandler = async ctx => {
 
     const query = await Query.getQuote()
 
-    console.log(query)
-
     const commandInstance = userMessage.substring(userMessage.search(' '), userMessage.length).trim()
 
     if (commandInstance === '/deleteQuote') {
@@ -23,9 +21,11 @@ const deleteQueryHandler = async ctx => {
         }
     } else {
         const quoteDelete = await Query.getQuoteOne({ _id: commandInstance })
+        if (!quoteDelete) {
+            return ctx.reply("Такого сообщения нету в базе данных")
+        }
         await Query.removeQuote(commandInstance)
-        ctx.replyWithHTML(`<strong>Цитата с содержанием</strong>:\n${quoteDelete.quote}\n<strong>удалена</strong>`)
-
+        return ctx.replyWithHTML(`<strong>Цитата с содержанием</strong>:\n${quoteDelete.quote}\n<strong>удалена</strong>`)
     }
 }
 
