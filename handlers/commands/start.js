@@ -1,9 +1,13 @@
-﻿const { getUserOne, addUser, returnToSub } = require('../../stores/context/user')
+﻿const { getCurrentStart } = require('../../stores/context/start')
+const { getUserOne, addUser, returnToSub } = require('../../stores/context/user')
 const { getReminder } = require('../../stores/context/reminder')
+const {} = require('../../stores/context')
 const startHandler = async ctx => {
     if (ctx.chat.type !== "private") return
 
     var user = await getUserOne({ username: ctx.chat.username })
+
+    const message = await getCurrentStart()
 
     if (user?.isSub) {
         // const currentTime = Date.now()
