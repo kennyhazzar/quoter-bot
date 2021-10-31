@@ -17,7 +17,7 @@ const startHandler = async ctx => {
             return `${index + 1}. ${!item.oneTime ? "Интервал" : "Одноразовое уведомление"} - <strong>${item.time.desc}</strong>\n`
         }).join("") : "<strong>Пусто</strong>"}`
 
-        const startMessage = `Привет! Время на сервере: ${currentTime.getHours()}:${currentTime.getMinutes()}\n${notificationMessage}`
+        const startMessage = `Привет! Время на сервере: ${currentTime.getHours() < 10 ? "0" + currentTime.getHours() : currentTime.getHours()}:${currentTime.getMinutes() < 10 ? "0" + currentTime.getMinutes() : currentTime.getMinutes()}\n${notificationMessage}`
 
         return ctx.replyWithHTML(startMessage, {
             reply_markup: {
