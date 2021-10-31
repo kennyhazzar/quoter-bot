@@ -48,6 +48,15 @@ async function remind(data, bot) {
         console.log(`date on remind: ${time / 1000}s`)
         console.log(new Date(data.time.time))
 
+        if (time < 0) {
+            try {
+                await changeReminderToUsed(data._id)
+            } catch (error) {
+                console.log(error)
+            }
+            return
+        }
+            
         if (data.hasUsed || (time < 0)) {
             console.log("setTimeout hasUsed")
             return
