@@ -25,11 +25,11 @@ const addReminderHandler = async ctx => {
         console.log(requestCommand)
 
         if (!category) {
-            await Reminder.addReminder(remindTime, ctx.chat.id, true, new Date(remindTime).toUTCString())
+            await Reminder.addReminder({ time: remindTime, desc: requestCommand[0] }, ctx.chat.id, true, new Date(remindTime).toUTCString())
             return ctx.reply(`Одноразовое уведомление в ${requestCommand[0]} было добавлено! Выбраны все категории для пользователя @${ctx.chat.username}`)
         }
 
-        await Reminder.addReminder(remindTime, ctx.chat.id, true, new Date(remindTime).toUTCString(), category)
+        await Reminder.addReminder({ time: remindTime, desc: requestCommand[0] }, ctx.chat.id, true, new Date(remindTime).toUTCString(), category)
         return ctx.reply(`Одноразовое уведомление в ${requestCommand[0]} было добавлено! Категория: ${requestCommand[1]} \nДля пользователя @${ctx.chat.username}`)
 
     }
