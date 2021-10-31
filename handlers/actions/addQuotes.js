@@ -1,5 +1,4 @@
 ﻿const { addQuote } = require('../../stores/context/quote')
-const { addCategory, getCategory } = require('../../stores/context/caterory')
 const { Composer, Scenes: { BaseScene, Stage }, Markup, Scenes } = require('telegraf')
 
 const stageKeyboard = Markup.keyboard(['Прервать', 'Сохранить']).oneTime().resize(true)
