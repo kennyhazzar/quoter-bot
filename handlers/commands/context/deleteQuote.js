@@ -5,7 +5,7 @@ const deleteQueryHandler = async ctx => {
 
     var userMessage = ctx.message.text
 
-    const query = await Query.getQuote()
+    const query = await Query.getQuote({userId: ctx.chat.id})
 
     const commandInstance = userMessage.substring(userMessage.search(' '), userMessage.length).trim()
 
