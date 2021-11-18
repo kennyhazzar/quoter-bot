@@ -2,4 +2,4 @@
 data
 config
 test.*
-stores\index.js
+stores/index.js
