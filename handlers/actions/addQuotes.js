@@ -1,4 +1,4 @@
-﻿const { addQuote } = require('../../stores/context/quote')
+﻿const { addQuote, addQuoteToAirtable } = require('../../stores/context/quote')
 const { Composer, Scenes: { BaseScene, Stage }, Markup, Scenes } = require('telegraf')
 
 const stageKeyboard = Markup.keyboard(['Прервать', 'Сохранить']).oneTime().resize(true)
@@ -53,6 +53,7 @@ settingAddQuotesScene.leave(async ctx => {
     for (let index = 0; index < ctx.session.quotes.length; index++) {
         const quote = ctx.session.quotes[index]
         await addQuote(quote.quote, quote.category, userId)
+        await addQuoteToAirtable(quote.quote, quote.category, userId)
     }
     return ctx.reply(`Сохранено ${ctx.session.quotes.length} цитат в категорию ${ctx.session.category} для пользователя @${ctx.chat.username}`)
 }, removeKeyboard)

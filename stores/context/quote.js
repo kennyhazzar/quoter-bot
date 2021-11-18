@@ -1,16 +1,14 @@
-﻿const Datastore = require('nedb')
+﻿const airtableKey = require('config').get('airtable.key')
+const axios = require('axios')
 
+const Datastore = require('nedb')
 const nedbPromise = require('nedb-promise')
-
-const db = new Datastore({autoload: true, filename: 'data/context/Quote.db'})
-
+const db = new Datastore({ autoload: true, filename: 'data/context/Quote.db' })
 const Quote = nedbPromise.fromInstance(db)
 
 const compactDb = () => db.persistence.compactDatafile()
 
 const isQuoteValid = (quoteText) => typeof quoteText == 'string' ? true : false
-const isCategoryValid = (quoteText) => typeof quoteText == 'string' ? true : false
-const isUserValid = (quoteText) => typeof quoteText == 'number' ? true : false
 
 const getQuoteOne = (query = {}) => Quote.findOne(query)
 
@@ -18,8 +16,53 @@ const getQuote = (query = {}) => Quote.find(query)
 
 const getCurrentQuote = () => Quote.findOne({ isSelect: true })
 
+const getQuoteFromAirtable = async (filterByFormula = '') => {
+    const tempData = []
+    let url = `https://api.airtable.com/v0/appkGLI22Hr7uJF6Z/%D0%A6%D0%B8%D1%82%D0%B0%D1%82%D1%8B?filterByFormula=${encodeURI(filterByFormula)}&view=Grid%20view`
+    if (filterByFormula == '') {
+        url = `https://api.airtable.com/v0/appkGLI22Hr7uJF6Z/%D0%A6%D0%B8%D1%82%D0%B0%D1%82%D1%8B?view=Grid%20view`
+    }
+
+    const data = await axios.get(url, {
+        headers: {
+            Authorization: `Bearer ${airtableKey}`
+        }
+    })
+
+    data.data.records.map(item => tempData.push(item.fields))
+
+    return tempData
+}
+
 const addQuote = (quoteText, categoryText, userId) => Quote.insert({ quote: quoteText, category: categoryText, userId })
 
+const addQuoteToAirtable = async (quoteText, categoryText, userId) => {
+    var data = JSON.stringify({
+        "fields": {
+          "quote": quoteText,
+          "category": categoryText,
+          "userId": userId
+        }
+      });
+      
+      var config = {
+        method: 'post',
+        url: 'https://api.airtable.com/v0/appkGLI22Hr7uJF6Z/%D0%A6%D0%B8%D1%82%D0%B0%D1%82%D1%8B',
+        headers: { 
+          'Authorization': `Bearer ${airtableKey}`, 
+          'Content-Type': 'application/json', 
+        },
+        data : data
+      };
+      
+      axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+}
 
 const updateCurrentQuote = (newQuoteText) => {
     isQuoteValid(newQuoteText)
@@ -48,5 +91,7 @@ module.exports = {
     addQuote,
     updateCurrentQuote,
     changeCurrentQuote,
-    removeQuote
+    removeQuote,
+    getQuoteFromAirtable,
+    addQuoteToAirtable
 }
