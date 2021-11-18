@@ -1,13 +1,19 @@
 ﻿const { getReminder, changeReminderToUsed, addIntervalId } = require('../stores/context/reminder')
 const isObjectEqual = require('./objectEquals')
-const { getQuote } = require('../stores/context/quote')
+const { getQuote, getQuoteFromAirtable } = require('../stores/context/quote')
 
 const TIME_OFFSET_UTC3 = 10800000
 const TIME_OFFSET_UTC4 = 14400000
 const TIME_OFFSET_UTC7 = 25200000
 
+var autoLoadIteration = 1
+
 const autoLoad = async (bot) => {
     console.log(bot.context)
+    var autoLoadTimer = 30000
+    if (autoLoadIteration === 1) {
+        autoLoadTimer = 3000
+    } else autoLoadTimer = 30000
     setInterval(async () => {
         try {
             var newReminders = []
@@ -35,7 +41,7 @@ const autoLoad = async (bot) => {
         } catch (error) {
             console.log(error)
         }
-    }, 30000);
+    }, autoLoadTimer);
 }
 
 async function remind(data, bot) {
@@ -63,7 +69,8 @@ async function remind(data, bot) {
         }
         setTimeout(async () => {
             if (!data.category) {
-                let quote = await getQuote({ userId: data.userId })
+                // let quote = await getQuote({ userId: data.userId })
+                let quote = await getQuoteFromAirtable(`{userId} = '${data.userId}'`)
 
                 randomQuote = quote[getRandomInt(0, quote.length)].quote
                 bot.telegram.sendMessage(data.userId, randomQuote)
@@ -73,7 +80,8 @@ async function remind(data, bot) {
                     console.log(error)
                 }
             } else {
-                let quote = await getQuote({ $and: [{ category: data.category }, { userId: data.userId }] })
+                // let quote = await getQuote({ $and: [{ category: data.category }, { userId: data.userId }] })
+                let quote = await getQuoteFromAirtable(`AND({category} = '${data.category}', {userId} = '${data.userId}')`)
 
                 randomQuote = quote[getRandomInt(0, quote.length)].quote
                 bot.telegram.sendMessage(data.userId, randomQuote)
@@ -96,13 +104,16 @@ async function remind(data, bot) {
             // foo(idInterval)
 
             if (!data.category) {
-                let quote = await getQuote({ userId: data.userId })
+                // let quote = await getQuote({ userId: data.userId })
+                let quote = await getQuoteFromAirtable(`{userId} = '${data.userId}'`)
 
                 randomQuote = quote[getRandomInt(0, quote.length)].quote
                 await bot.telegram.sendMessage(data.userId, randomQuote)
 
             } else {
-                let quote = await getQuote({ $and: [{ category: data.category }, { userId: data.userId }] })
+                // let quote = await getQuote({ $and: [{ category: data.category }, { userId: data.userId }] })
+                let quote = await getQuoteFromAirtable(`AND({category} = '${data.category}', {userId} = '${data.userId}')`)
+
 
                 randomQuote = quote[getRandomInt(0, quote.length)].quote
                 await bot.telegram.sendMessage(data.userId, randomQuote)
