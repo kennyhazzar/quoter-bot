@@ -2,3 +2,4 @@
 data
 config
 test.*
+stores\index.js
