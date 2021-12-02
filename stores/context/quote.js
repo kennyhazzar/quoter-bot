@@ -1,4 +1,5 @@
 ﻿const airtableKey = require('config').get('airtable.key')
+const airtableBase = require('config').get('airtable.base')
 const axios = require('axios')
 
 const Datastore = require('nedb')
@@ -18,9 +19,9 @@ const getCurrentQuote = () => Quote.findOne({ isSelect: true })
 
 const getQuoteFromAirtable = async (filterByFormula = '') => {
     const tempData = []
-    let url = `https://api.airtable.com/v0/appkGLI22Hr7uJF6Z/%D0%A6%D0%B8%D1%82%D0%B0%D1%82%D1%8B?filterByFormula=${encodeURI(filterByFormula)}&view=Grid%20view`
+    let url = `https://api.airtable.com/v0/${airtableBase}/%D0%A6%D0%B8%D1%82%D0%B0%D1%82%D1%8B?filterByFormula=${encodeURI(filterByFormula)}&view=Grid%20view`
     if (filterByFormula == '') {
-        url = `https://api.airtable.com/v0/appkGLI22Hr7uJF6Z/%D0%A6%D0%B8%D1%82%D0%B0%D1%82%D1%8B?view=Grid%20view`
+        url = `https://api.airtable.com/v0/${airtableBase}/%D0%A6%D0%B8%D1%82%D0%B0%D1%82%D1%8B?view=Grid%20view`
     }
 
     const data = await axios.get(url, {
@@ -47,7 +48,7 @@ const addQuoteToAirtable = async (quoteText, categoryText, userId) => {
       
       var config = {
         method: 'post',
-        url: 'https://api.airtable.com/v0/appkGLI22Hr7uJF6Z/%D0%A6%D0%B8%D1%82%D0%B0%D1%82%D1%8B',
+        url: `https://api.airtable.com/v0/${airtableBase}/%D0%A6%D0%B8%D1%82%D0%B0%D1%82%D1%8B`,
         headers: { 
           'Authorization': `Bearer ${airtableKey}`, 
           'Content-Type': 'application/json', 
