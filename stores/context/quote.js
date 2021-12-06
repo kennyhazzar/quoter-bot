@@ -42,7 +42,7 @@ const addQuoteToAirtable = async (quoteText, categoryText, userId) => {
         "fields": {
           "quote": quoteText,
           "category": categoryText,
-          "userId": userId
+          "userid": userId
         }
       });
       
